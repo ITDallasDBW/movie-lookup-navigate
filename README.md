@@ -1,3 +1,6 @@
+11/3/2025
+Taking components from previous projects. Putting them into new project with navigate between pages instead of using React to manipulate programmatically.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
