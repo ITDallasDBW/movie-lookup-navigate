@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import InputFn from "../components/InputFn";
 import axios from "axios";
 import ShowMovies from "../components/ShowMovies";
 import Sorting from "../components/Sorting";
-import ShowFeature from "../components/ShowFeature";
+// import ShowFeature from "../components/ShowFeature";
+import Feature from "./Feature";
 
 //API CREDS
 const BASE_URL = `https://www.omdbapi.com/`;
@@ -13,43 +14,68 @@ const API_KEY = "c393ced6";
 const Home = () => {
   let navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [apiResp, setApiResp] = useState([]);
   const [moviesToShow, setMoviesToShow] = useState([]);
-  const [featureToGet, setFeatureToGet] = useState("");
-  const [featureToShow, setFeatureToShow] = useState({})
-  //   const [dataToShow, setDataToShow] = useState([]);
+  const [featureId, setFeatureId] = useState("");
+  const [featureToShow, setFeatureToShow] = useState({});
+  const [prevMovies, setPrevMovies] = useState([]);
+  // const [apiResp, setApiResp] = useState([]);
+
+  useEffect(() => {
+    // Save movies to session storage whenever they change
+    if (moviesToShow.length > 0) {
+      sessionStorage.setItem("sessionMovies", JSON.stringify(moviesToShow));
+    }
+  }, [moviesToShow]);
+
+  // Load saved movies when component mounts
+  useEffect(() => {
+    const savedMovies = sessionStorage.getItem("sessionMovies");
+    if (savedMovies) {
+      setMoviesToShow(JSON.parse(savedMovies));
+    }
+  }, []);
 
   //get search term, setLoading, search for movie,
   //await response, set response to moviesToShow, stop loading
   async function getMovies(inputValue) {
     setLoading(true);
-    setApiResp([]);
     setMoviesToShow([]);
     const { data } = await axios.get(
       `${BASE_URL}?apikey=${API_KEY}&s=${inputValue}`
     );
-
     const searchResults = data.Search || [];
-    setApiResp(searchResults);
     setMoviesToShow(searchResults);
     setLoading(false);
-    console.log(searchResults);
+    // console.log(searchResults);
   }
-  async function getFeature(featureToGet) {
-    setLoading(true);
-    const { data } = await axios.get(
-      `${BASE_URL}?apikey=${API_KEY}&i=${featureToGet}`
-    );
 
-    const featureResults = data;
-    setFeatureToShow(featureResults);
-    navigate(`${featureToGet}`);
-    console.log(data);
+  function getFeatureId(featureId) {
+    // console.log(featureId)
+    navigate(`${featureId}`);
   }
+  //This gets the data for the feature
+  // async function getFeature(featureId) {
+  //   //  navigate(`${featureId}`);
+  //   // setLoading(true);
+  //   const { data } = await axios.get(
+  //     `${BASE_URL}?apikey=${API_KEY}&i=${featureId}`
+  //   );
+
+  //   const featureResults = data;
+  //   setFeatureToShow(featureResults);
+  //   // navigate(`${featureId}`);
+  //   console.log(data);
+  //   console.log(featureResults.Title)
+  //   console.log(featureToShow)
+  //   // setLoading(false);
+  // }
 
   const handleSort = (sorted) => {
-    setMoviesToShow(sorted);
+    if (sorted) {
+      setMoviesToShow(sorted);
+    }
   };
+  // console.log(prevList);
   return (
     <>
       <h1>Home.js</h1>
@@ -58,17 +84,25 @@ const Home = () => {
         <InputFn onSubmit={getMovies} />
       </section>
       <section id="display__movies">
-        <Sorting moviesToSort={apiResp} onSort={handleSort} />
+        <Sorting moviesToSort={moviesToShow} onSort={handleSort} />
         <ShowMovies
           moviesToShow={moviesToShow}
-          featureToLookup={(id) => {
-            setFeatureToGet(id);
-            getFeature(id);
+          featureToLookup={(lookupId) => {
+            // setFeatureId(lookupId);
+            getFeatureId(lookupId);
+            // console.log(lookupId);
+            //Feature imdbID is here
           }}
         />
-        {featureToShow && Object.keys(featureToShow).length > 0 && (
-          <ShowFeature featureResults={featureToShow} />
-        )}
+        {/* {featureToShow && Object.keys(featureToShow).length > 0 && (
+          <Feature featureResults={featureToShow} />
+        )} */}
+      </section>
+      <section id="display__feature">
+        {/* {featureResults && Object.keys(featureResults).length > 0 && (
+          <Feature featureResults={featureResults} />
+        )
+        } */}
       </section>
     </>
   );

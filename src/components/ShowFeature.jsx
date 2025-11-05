@@ -1,8 +1,10 @@
 import React from 'react';
 
 const ShowFeature = ({ featureResults }) => {
+    console.log(featureResults)
     return (
-        <div>
+        <>
+            <h2>ShowFeature.jsx</h2>
             <h2>{featureResults.Title}</h2>
             <img src={featureResults.Poster} alt={featureResults.Title} />
             <p>Year: {featureResults.Year}</p>
@@ -10,7 +12,7 @@ const ShowFeature = ({ featureResults }) => {
             <p>Director: {featureResults.Director}</p>
             <p>Actors: {featureResults.Actors}</p>
             <p>Rating: {featureResults.imdbRating}</p>
-        </div>
+        </>
     );
 };
 
