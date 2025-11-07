@@ -2,40 +2,26 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Scratch = () => {
-  // useEffect(() => {
-  //     setCall();
-  // }, [])
-
   let [count, setCount] = useState(0);
-//   let [callAgain, setCallAgain] = useState(false);
+  let [avail, setAvail] = useState(10);
 
-  let callAgain=false;
   let showing = (count + 1) * 6;
-  let avail = 10;
   let diff = avail - showing;
-
-  if (diff < 0) {
-// setCallAgain(true);
-    callAgain=true;
-  } else {
-// setCallAgain(false);
-    callAgain=false;
-  }
-
-  if ((callAgain = true)) {
-    avail = avail + 10;
-  } 
-//   else {
-//     avail=avail;
-//   }
+  let callAgain = showing > avail;
 
   function nextSet() {
     console.log("Next");
     setCount(count + 1);
+    // Check if we need more data after incrementing
+    let newShowing = (count + 2) * 6;
+    if (newShowing > avail) {
+      //THIS IS WHERE THE NEXT CALL IS
+      setAvail(avail + 10);
+    }
   }
   function prevSet() {
     console.log("Previous");
-    setCount(count-1)
+    setCount(count - 1);
   }
   function reset() {}
 
@@ -51,7 +37,7 @@ const Scratch = () => {
         <div className="needed">showing: {showing}</div>
         <div className="available">avail: {avail}</div>
         <div className="difference">diff: {diff}</div>
-        <div className="result">callAgain?: {callAgain = true ? "Yes" : "No"}</div>
+        <div className="result">callAgain?: {callAgain ? "Yes" : "No"}</div>
       </div>
     </>
   );
