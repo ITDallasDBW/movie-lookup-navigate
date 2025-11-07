@@ -9,30 +9,28 @@ const API_KEY = "c393ced6";
 
 const Feature = ({ getFeature }) => {
   let navigate = useNavigate();
-  const {id} = useParams();
-  const [featureResults, setFeatureResults] = useState({})
-  const [loadFeature, setLoadFeature] = useState(false)
+  const { id } = useParams();
+  const [featureResults, setFeatureResults] = useState({});
+  const [loadFeature, setLoadFeature] = useState(false);
 
   useEffect(() => {
     setLoadFeature(true);
-    getFeature(id)
-  }, [])
+    getFeature(id);
+  }, []);
 
   // console.log(id);
   // useEffect(() => {
   //   navigate(`${featureResults.imdbID}`)
   // }, [])
-// console.log(featureResults)
+  // console.log(featureResults)
   const handleGoBack = () => {
     navigate(-1);
   };
 
-  //This gets the data for the feature 
+  //This gets the data for the feature
   async function getFeature(id) {
     // setFeatureToShow({});
-    const { data } = await axios.get(
-      `${BASE_URL}?apikey=${API_KEY}&i=${id}`
-    );
+    const { data } = await axios.get(`${BASE_URL}?apikey=${API_KEY}&i=${id}`);
 
     const searchResults = data || {};
     setFeatureResults(searchResults);
@@ -40,7 +38,6 @@ const Feature = ({ getFeature }) => {
     // console.log(data);
     // console.log(searchResults.Title)
     // console.log(featureToShow)
-    // setLoading(false);
   }
   return (
     <>
@@ -49,6 +46,7 @@ const Feature = ({ getFeature }) => {
       <button onClick={handleGoBack}>Go Back</button>
       {/* <ShowFeature featureResults={featureResults} /> */}
       <h2>Show the Feature.jsx</h2>
+      {loadFeature && <h1>MAKING LOAD</h1>}
       <h2>{featureResults.Title}</h2>
       <img src={featureResults.Poster} alt={featureResults.Title} />
       <p>Year: {featureResults.Year}</p>

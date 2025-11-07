@@ -46,6 +46,7 @@ const Home = () => {
     const searchResults = data.Search || [];
     setMoviesToShow(searchResults);
     setLoading(false);
+
     // console.log(searchResults);
   }
 
@@ -53,22 +54,6 @@ const Home = () => {
     // console.log(featureId)
     navigate(`${featureId}`);
   }
-  //This gets the data for the feature
-  // async function getFeature(featureId) {
-  //   //  navigate(`${featureId}`);
-  //   // setLoading(true);
-  //   const { data } = await axios.get(
-  //     `${BASE_URL}?apikey=${API_KEY}&i=${featureId}`
-  //   );
-
-  //   const featureResults = data;
-  //   setFeatureToShow(featureResults);
-  //   // navigate(`${featureId}`);
-  //   console.log(data);
-  //   console.log(featureResults.Title)
-  //   console.log(featureToShow)
-  //   // setLoading(false);
-  // }
 
   const handleSort = (sorted) => {
     if (sorted) {
@@ -80,30 +65,22 @@ const Home = () => {
     <>
       <h1>Home.js</h1>
       <section id="search">
-        <button onClick={() => navigate("/feature")}>Feature</button>
+        <button onClick={() => navigate("/scratch")}>Scratch</button>
         <InputFn onSubmit={getMovies} />
       </section>
+        {loading && <h1>MAKING LOAD</h1>}
+        {moviesToShow.length > 0 &&
       <section id="display__movies">
         <Sorting moviesToSort={moviesToShow} onSort={handleSort} />
         <ShowMovies
           moviesToShow={moviesToShow}
           featureToLookup={(lookupId) => {
-            // setFeatureId(lookupId);
             getFeatureId(lookupId);
             // console.log(lookupId);
-            //Feature imdbID is here
           }}
-        />
-        {/* {featureToShow && Object.keys(featureToShow).length > 0 && (
-          <Feature featureResults={featureToShow} />
-        )} */}
+          />
       </section>
-      <section id="display__feature">
-        {/* {featureResults && Object.keys(featureResults).length > 0 && (
-          <Feature featureResults={featureResults} />
-        )
-        } */}
-      </section>
+        }
     </>
   );
 };
