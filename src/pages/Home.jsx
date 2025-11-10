@@ -21,14 +21,22 @@ const Home = () => {
   const [featureToShow, setFeatureToShow] = useState({});
   const [prevMovies, setPrevMovies] = useState([]);
   // const [apiResp, setApiResp] = useState([]);
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(() => {
+    const saved=sessionStorage.getItem('count');
+    return saved ? Number(saved) : 0;
+  });
+
+  //Session Storage saves count when it changes.
+  useEffect(() => {
+    sessionStorage.setItem('count', count);
+  })
 
   //Session Storage saves movies between pages
   useEffect(() => {
     // Save vars to session storage whenever they change
     if (moviesToShow.length > 0) {
       sessionStorage.setItem("sessionMovies", JSON.stringify(moviesToShow));
-      console.log(moviesToShow)
+      console.log(moviesToShow[0].Title)
     }
   }, [moviesToShow]);
   
@@ -36,7 +44,7 @@ const Home = () => {
   useEffect(() => {
     const savedMovies = sessionStorage.getItem("sessionMovies");
     if (savedMovies) {
-      console.log(savedMovies);
+      // console.log(savedMovies);
       setMoviesToShow(JSON.parse(savedMovies));
     }
   }, []);
@@ -86,7 +94,7 @@ const Home = () => {
         <InputFn onSubmit={getMovies} />
       </section>
 
-      
+
       <Slicer inFromAPI={respToSlice} onSlice={handleSlice} />
       {/* SLICER HERE */}
       {loading && <h1>MAKING LOAD</h1>}
