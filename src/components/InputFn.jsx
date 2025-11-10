@@ -4,11 +4,11 @@ const InputFn = ({onSubmit}) => {
 
 const [inputValue, setInputValue] = useState("")
 
-  const handleInputChange = (event) => {
+  function handleInputChange (event) {
     setInputValue(event.target.value);
   };
 
-  const handleSubmit = () => {
+  function handleSubmit() {
         onSubmit(inputValue);
         setInputValue("")
   };

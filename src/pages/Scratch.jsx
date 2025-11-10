@@ -7,13 +7,13 @@ const Scratch = () => {
 
   let showing = (count + 1) * 6;
   let diff = avail - showing;
-  let callAgain = showing > avail;
 
   function nextSet() {
     console.log("Next");
     setCount(count + 1);
     // Check if we need more data after incrementing
     let newShowing = (count + 2) * 6;
+    //THIS IS THE TEST FOR THE NEXT ITERATION
     if (newShowing > avail) {
       //THIS IS WHERE THE NEXT CALL IS
       setAvail(avail + 10);
@@ -23,7 +23,6 @@ const Scratch = () => {
     console.log("Previous");
     setCount(count - 1);
   }
-  function reset() {}
 
   return (
     <>
@@ -32,12 +31,12 @@ const Scratch = () => {
         <button onClick={prevSet}>Previous 6</button>
         <button onClick={nextSet}>Next 6</button>
       </div>
+
       <div className="results">
         <div className="iteration">count: {count}</div>
         <div className="needed">showing: {showing}</div>
         <div className="available">avail: {avail}</div>
         <div className="difference">diff: {diff}</div>
-        <div className="result">callAgain?: {callAgain ? "Yes" : "No"}</div>
       </div>
     </>
   );

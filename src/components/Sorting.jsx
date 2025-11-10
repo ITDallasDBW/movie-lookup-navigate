@@ -3,7 +3,7 @@ import React, { useState } from "react";
 const Sorting = ({ moviesToSort, onSort }) => {
   // console.log("dataToSort received", dataToSort);
 
-  const handleSortChange = (e) => {
+  function handleSortChange(e) {
     const sortMethod = e.target.value;
     let sorted = [...moviesToSort];
 
