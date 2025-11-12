@@ -18,11 +18,6 @@ const Feature = ({ getFeature }) => {
     getFeature(id)
   }, [])
 
-  // console.log(id);
-  // useEffect(() => {
-  //   navigate(`${featureResults.imdbID}`)
-  // }, [])
-// console.log(featureResults)
   const handleGoBack = () => {
     navigate(-1);
   };
@@ -47,7 +42,6 @@ const Feature = ({ getFeature }) => {
       <h1>Feature.jsx</h1>
       <Link to={"/"}>Home</Link>
       <button onClick={handleGoBack}>Go Back</button>
-      {/* <ShowFeature featureResults={featureResults} /> */}
       <h2>Show the Feature.jsx</h2>
       <h2>{featureResults.Title}</h2>
       <img src={featureResults.Poster} alt={featureResults.Title} />

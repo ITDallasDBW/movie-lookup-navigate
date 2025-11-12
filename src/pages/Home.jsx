@@ -12,6 +12,7 @@ const BASE_URL = `https://www.omdbapi.com/`;
 const API_KEY = "c393ced6";
 
 const Home = () => {
+  //USE STATE
   let navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [moviesToShow, setMoviesToShow] = useState([]);
@@ -20,8 +21,9 @@ const Home = () => {
   const [prevMovies, setPrevMovies] = useState([]);
   // const [apiResp, setApiResp] = useState([]);
 
-  useEffect(() => {
+  //USE EFFECT
     // Save movies to session storage whenever they change
+  useEffect(() => {
     if (moviesToShow.length > 0) {
       sessionStorage.setItem("sessionMovies", JSON.stringify(moviesToShow));
     }
@@ -35,6 +37,7 @@ const Home = () => {
     }
   }, []);
 
+// FUNCTIONS
   //get search term, setLoading, search for movie,
   //await response, set response to moviesToShow, stop loading
   async function getMovies(inputValue) {
@@ -48,61 +51,42 @@ const Home = () => {
     setLoading(false);
     // console.log(searchResults);
   }
-
+//sends imcdID to address bar and redirects there
   function getFeatureId(featureId) {
     // console.log(featureId)
     navigate(`${featureId}`);
   }
-  //This gets the data for the feature
-  // async function getFeature(featureId) {
-  //   //  navigate(`${featureId}`);
-  //   // setLoading(true);
-  //   const { data } = await axios.get(
-  //     `${BASE_URL}?apikey=${API_KEY}&i=${featureId}`
-  //   );
-
-  //   const featureResults = data;
-  //   setFeatureToShow(featureResults);
-  //   // navigate(`${featureId}`);
-  //   console.log(data);
-  //   console.log(featureResults.Title)
-  //   console.log(featureToShow)
-  //   // setLoading(false);
-  // }
-
+//once data from API is sorted by select/sort box
+//sends sorted data (sorted) to be displayed
   const handleSort = (sorted) => {
     if (sorted) {
       setMoviesToShow(sorted);
     }
   };
   // console.log(prevList);
+
   return (
     <>
-      <h1>Home.js</h1>
+    <hr />
+      <h3>Home.js</h3>
       <section id="search">
         <button onClick={() => navigate("/feature")}>Feature</button>
+        <hr />
         <InputFn onSubmit={getMovies} />
       </section>
+      <hr />
       <section id="display__movies">
         <Sorting moviesToSort={moviesToShow} onSort={handleSort} />
+        <hr />
         <ShowMovies
           moviesToShow={moviesToShow}
           featureToLookup={(lookupId) => {
-            // setFeatureId(lookupId);
             getFeatureId(lookupId);
-            // console.log(lookupId);
-            //Feature imdbID is here
           }}
         />
-        {/* {featureToShow && Object.keys(featureToShow).length > 0 && (
-          <Feature featureResults={featureToShow} />
-        )} */}
       </section>
+      <hr />
       <section id="display__feature">
-        {/* {featureResults && Object.keys(featureResults).length > 0 && (
-          <Feature featureResults={featureResults} />
-        )
-        } */}
       </section>
     </>
   );

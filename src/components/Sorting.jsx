@@ -30,7 +30,7 @@ const Sorting = ({ moviesToSort, onSort }) => {
     }
 
     onSort(sorted);
-    console.log(sorted);
+    // console.log(sorted);
       };
 
     return (
