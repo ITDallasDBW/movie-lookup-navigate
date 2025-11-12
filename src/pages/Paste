@@ -1,0 +1,74 @@
+function MovieSearch() {
+  const [allMovies, setAllMovies] = useState([]);
+  const [displayCount, setDisplayCount] = useState(6);
+  const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const fetchMovies = async (pageNum) => {
+    const response = await fetch(
+      `http://www.omdbapi.com/?s=${searchTerm}&page=${pageNum}&apikey=YOUR_KEY`
+    );
+    const data = await response.json();
+    
+    if (pageNum === 1) {
+      setAllMovies(data.Search); // First page - replace
+    } else {
+      setAllMovies(prev => [...prev, ...data.Search]); // Add to existing
+    }
+    setPage(pageNum);
+  };
+
+  const showNext6 = () => {
+    const newDisplayCount = displayCount + 6;
+    
+    // Check if we need more data from API
+    if (newDisplayCount > allMovies.length) {
+      fetchMovies(page + 1); // Fetch next page (10 more movies)
+    }
+    
+    setDisplayCount(newDisplayCount);
+  };
+
+  const showPrev6 = () => {
+    setDisplayCount(prev => Math.max(6, prev - 6));
+  };
+
+  // Movies to actually display
+  const moviesToShow = allMovies.slice(0, displayCount);
+
+  return (
+    <div>
+      {moviesToShow.map(movie => (
+        <div key={movie.imdbID}>{movie.Title}</div>
+      ))}
+      
+      <button onClick={showPrev6} disabled={displayCount <= 6}>
+        Previous 6
+      </button>
+      <button onClick={showNext6}>
+        Next 6
+      </button>
+      
+      <p>Showing {moviesToShow.length} of {allMovies.length} fetched</p>
+    </div>
+  );
+}
+
+
+Here's the logic you need:
+The Math:
+
+javascriptconst [page, setPage] = useState(1);
+// OMDB page (each page = 10 results)
+const [allMovies, setAllMovies] = useState([]); 
+// All fetched movies
+const [displayCount, setDisplayCount] = useState(6); 
+// How many to show
+
+// When to fetch more:
+const needsMoreData = displayCount > allMovies.length;
+
+if (needsMoreData) {
+  // Fetch next page from OMDB
+  fetchNextPage(page + 1);
+}

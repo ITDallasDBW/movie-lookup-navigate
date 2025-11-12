@@ -35,6 +35,7 @@ const Sorting = ({ moviesToSort, onSort }) => {
 
     return (
       <>
+      <hr />
         <h3>This is Sorting</h3>
         <label htmlFor="sort-select">Sort by:</label>
         <select id="sort-select" onChange={handleSortChange}>

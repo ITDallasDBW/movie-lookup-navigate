@@ -10,11 +10,12 @@ const [inputValue, setInputValue] = useState("")
 
   function handleSubmit() {
         onSubmit(inputValue);
-        setInputValue("")
+        // setInputValue("")
   };
 
   return (
     <>
+    <hr />
     <h3>InputFn</h3>
       <input
         type="text"
@@ -26,6 +27,7 @@ const [inputValue, setInputValue] = useState("")
       <button id="idBtn" onClick={handleSubmit}>
         Submit
       </button>
+      <p>InputFn inputValue: {inputValue}</p>
     </>
   );
 };
