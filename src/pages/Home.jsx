@@ -20,6 +20,11 @@ const Home = () => {
   const [featureToShow, setFeatureToShow] = useState({});
   const [prevMovies, setPrevMovies] = useState([]);
   // const [apiResp, setApiResp] = useState([]);
+  //PageUp/Dn states
+  const [allMovies, setAllMovies] = useState([]);
+  const [displayCount, setDisplayCount]=useState(6);
+  const [omdbPage, setOmdbPage]=useState(1);
+  const [inputValue, setInputValue]=useState('');
 
   //USE EFFECT
     // Save movies to session storage whenever they change
@@ -40,18 +45,27 @@ const Home = () => {
 // FUNCTIONS
   //get search term, setLoading, search for movie,
   //await response, set response to moviesToShow, stop loading
+  console.log(omdbPage);
   async function getMovies(inputValue) {
-    setLoading(true);
-    setMoviesToShow([]);
+    // setLoading(true);
+    // setMoviesToShow([]);
     const { data } = await axios.get(
-      `${BASE_URL}?apikey=${API_KEY}&s=${inputValue}`
+      `${BASE_URL}?apikey=${API_KEY}&s=${inputValue}&page=${omdbPage}`
     );
+    if (omdbPage === 1) {
+      setAllMovies(data.Search); //First page - replace
+    } else {
+      setAllMovies(prev => [...prev, ...data.Search]); //Add results to existing array
+    }
+    setOmdbPage(omdbPage+1);
+      console.log(omdbPage);
+
     const searchResults = data.Search || [];
     setMoviesToShow(searchResults);
-    setLoading(false);
+    // setLoading(false);
     // console.log(searchResults);
   }
-//sends imcdID to address bar and redirects there
+//sends imdbID to address bar and redirects there
   function getFeatureId(featureId) {
     // console.log(featureId)
     navigate(`${featureId}`);
