@@ -1,37 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const ShowMovies = ({ moviesToShow = [], featureToLookup, getMoreResults }) => {
-    console.log(moviesToShow);
+  console.log(moviesToShow);
 
-  const [displayCount, setDisplayCount] = useState(6);
+  //   const [displayCount, setDisplayCount] = useState(6);
   const [endSlice, setEndSlice] = useState(6);
-  let startSlice = endSlice - 6;
+  const startSlice = Math.max(0, endSlice - 6);
+
+  useEffect(() => {
+    const savedSlice = sessionStorage.getItem("savedSlice");
+
+    if (savedSlice) {
+      setEndSlice(parseInt(savedSlice));
+    }
+  }, []);
+
   //passes selected movie to feature
   function fetchFeature(imdbID) {
+    sessionStorage.setItem("savedSlice", endSlice.toString());
     featureToLookup(imdbID);
     // console.log(imdbID);
   }
 
   //Click handlers
   function pageDown() {
-    console.log("Prev displayCount");
+    const newEndSlice = endSlice - 6;
+    setEndSlice(newEndSlice);
   }
+
   function pageUp() {
-    console.log("Next displayCount");
-    const newDisplayCount = displayCount + 6;
-    setEndSlice(endSlice + 6);
+    const newEndSlice = endSlice + 6;
+    setEndSlice(newEndSlice);
     //Check data supply for display
-    if (newDisplayCount > moviesToShow.length) {
+    if (newEndSlice > moviesToShow.length) {
       getMoreResults();
     }
-    setDisplayCount(newDisplayCount);
   }
 
   return (
     <>
       <h3>ShowMovies</h3>
-      <p>Showing {startSlice} - {endSlice} of {moviesToShow.length}
-</p>
+      <p>
+        Showing {startSlice + 1} - {endSlice} of {moviesToShow.length}
+      </p>
       <button className="prevNext" onClick={pageDown}>
         Prev
       </button>

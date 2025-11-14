@@ -27,6 +27,39 @@ const Home = () => {
   const [inputValue, setInputValue] = useState("");
 
   //USE EFFECT
+  // Load ONCE on mount only
+  useEffect(() => {
+    const savedMovies = sessionStorage.getItem("sessionMovies");
+    const savedInput = sessionStorage.getItem("sessionInput");
+    const savedPage = sessionStorage.getItem("sessionPage");
+
+    if (savedMovies) {
+      setAllMovies(JSON.parse(savedMovies));
+      setInputValue(savedInput || "");
+      setOmdbPage(parseInt(savedPage) || 1);
+    }
+  }, []); // Empty array - ONLY runs on mount
+
+  // //Only save on unmount
+  // useEffect(() => {
+  //   //Load on mount
+  //   const savedMovies=sessionStorage.getItem("sessionMovies");
+  //   if (savedMovies) {
+  //     setAllMovies(JSON.parse(savedMovies));
+  //     setInputValue(sessionStorage.getItem("sessionInput") || "");
+  //     setOmdbPage(parseInt(sessionStorage.getItem("sessionPage")) || 1);
+  //   }
+
+  //   //Save on unmount (cleanup function)
+  //   return () => {
+  //     if (allMovies.length > 0) {
+  //       sessionStorage.setItem("sessionMovies", JSON.stringify(allMovies));
+  //       sessionStorage.setItem("sessionInput", inputValue);
+  //       sessionStorage.setItem("sessionPage", omdbPage.toString());
+  //     }
+  //   }
+  // }, [])
+
   // Save movies to session storage whenever they change
   // useEffect(() => {
   //   if (allMovies.length > 0) {
@@ -74,6 +107,9 @@ const Home = () => {
   //sends imdbID to address bar and redirects there
   function getFeatureId(featureId) {
     // console.log(featureId)
+    sessionStorage.setItem("sessionMovies", JSON.stringify(allMovies));
+    sessionStorage.setItem("sessionInput", inputValue);
+    sessionStorage.setItem("sessionPage", omdbPage.toString());
     navigate(`${featureId}`);
   }
   //once data from API is sorted by select/sort box
@@ -85,12 +121,14 @@ const Home = () => {
   };
   // console.log(prevList);
   function getFirstMovies(inputValue) {
+    sessionStorage.clear();
+
     getMovies(inputValue, 1);
   }
   function getNext() {
     // const nextPage=omdbPage+1;
     // setOmdbPage(nextPage);
-    getMovies(inputValue, omdbPage+1);
+    getMovies(inputValue, omdbPage + 1);
     // console.log(omdbPage);
   }
 

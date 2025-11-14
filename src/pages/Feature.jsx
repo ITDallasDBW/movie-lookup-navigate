@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 // import ShowFeature from "../components/ShowFeature";
 
 //API CREDS
@@ -9,6 +9,7 @@ const API_KEY = "c393ced6";
 
 const Feature = ({ getFeature }) => {
   let navigate = useNavigate();
+  const location = useLocation();
   const {id} = useParams();
   const [featureResults, setFeatureResults] = useState({})
   const [loadFeature, setLoadFeature] = useState(false)
