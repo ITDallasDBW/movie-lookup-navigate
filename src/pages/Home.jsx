@@ -4,7 +4,6 @@ import InputFn from "../components/InputFn";
 import axios from "axios";
 import ShowMovies from "../components/ShowMovies";
 import Sorting from "../components/Sorting";
-// import ShowFeature from "../components/ShowFeature";
 import Feature from "./Feature";
 
 //API CREDS
