@@ -22,86 +22,102 @@ const Home = () => {
   // const [apiResp, setApiResp] = useState([]);
   //PageUp/Dn states
   const [allMovies, setAllMovies] = useState([]);
-  const [displayCount, setDisplayCount]=useState(6);
-  const [omdbPage, setOmdbPage]=useState(1);
-  const [inputValue, setInputValue]=useState('');
+  // const [displayCount, setDisplayCount]=useState(6);
+  const [omdbPage, setOmdbPage] = useState(1);
+  const [inputValue, setInputValue] = useState("");
 
   //USE EFFECT
-    // Save movies to session storage whenever they change
-  useEffect(() => {
-    if (moviesToShow.length > 0) {
-      sessionStorage.setItem("sessionMovies", JSON.stringify(moviesToShow));
-    }
-  }, [moviesToShow]);
+  // Save movies to session storage whenever they change
+  // useEffect(() => {
+  //   if (allMovies.length > 0) {
+  //     sessionStorage.setItem("sessionMovies", JSON.stringify(allMovies));
+  //   }
+  // }, [allMovies]);
 
-  // Load saved movies when component mounts
-  useEffect(() => {
-    const savedMovies = sessionStorage.getItem("sessionMovies");
-    if (savedMovies) {
-      setMoviesToShow(JSON.parse(savedMovies));
-    }
-  }, []);
+  // // Load saved movies when component mounts
+  // useEffect(() => {
+  //   const savedMovies = sessionStorage.getItem("sessionMovies");
+  //   if (savedMovies) {
+  //     setAllMovies(JSON.parse(savedMovies));
+  //   }
+  // }, []);
 
-// FUNCTIONS
+  // FUNCTIONS
   //get search term, setLoading, search for movie,
-  //await response, set response to moviesToShow, stop loading
-  console.log(omdbPage);
-  async function getMovies(inputValue) {
-    // setLoading(true);
-    // setMoviesToShow([]);
-    const { data } = await axios.get(
-      `${BASE_URL}?apikey=${API_KEY}&s=${inputValue}&page=${omdbPage}`
-    );
-    if (omdbPage === 1) {
-      setAllMovies(data.Search); //First page - replace
-    } else {
-      setAllMovies(prev => [...prev, ...data.Search]); //Add results to existing array
-    }
-    setOmdbPage(omdbPage+1);
-      console.log(omdbPage);
+  //await response, set response to allMovies, stop loading
 
-    const searchResults = data.Search || [];
-    setMoviesToShow(searchResults);
+  console.log(`Before getMovies omdbPage ${omdbPage}`);
+  async function getMovies(inputValue, pageNum) {
+    setInputValue(inputValue);
+    console.log(`inputValue set in getMovies fn: ${inputValue}`);
+    // setLoading(true);
+    // allMovies([]);
+    const { data } = await axios.get(
+      `${BASE_URL}?apikey=${API_KEY}&s=${inputValue}&page=${pageNum}`
+    );
+    if (data.Response === "True" && data.Search) {
+      if (pageNum === 1) {
+        setAllMovies(data.Search); //First page - replace
+      } else {
+        setAllMovies((prev) => [...prev, ...data.Search]); //Add results to existing array
+      }
+      setOmdbPage(pageNum);
+    }
+    // setOmdbPage((prev) => prev + 1);
+    // console.log(`omdbPage set at bottom of getMovies: ${omdbPage}`);
+
+    // const searchResults = data.Search || [];
+    // setMoviesToShow(searchResults);
     // setLoading(false);
     // console.log(searchResults);
   }
-//sends imdbID to address bar and redirects there
+  //sends imdbID to address bar and redirects there
   function getFeatureId(featureId) {
     // console.log(featureId)
     navigate(`${featureId}`);
   }
-//once data from API is sorted by select/sort box
-//sends sorted data (sorted) to be displayed
+  //once data from API is sorted by select/sort box
+  //sends sorted data (sorted) to be displayed
   const handleSort = (sorted) => {
     if (sorted) {
-      setMoviesToShow(sorted);
+      setAllMovies(sorted);
     }
   };
   // console.log(prevList);
+  function getFirstMovies(inputValue) {
+    getMovies(inputValue, 1);
+  }
+  function getNext() {
+    // const nextPage=omdbPage+1;
+    // setOmdbPage(nextPage);
+    getMovies(inputValue, omdbPage+1);
+    // console.log(omdbPage);
+  }
 
   return (
     <>
-    <hr />
+      <hr />
       <h3>Home.js</h3>
       <section id="search">
         <button onClick={() => navigate("/feature")}>Feature</button>
         <hr />
-        <InputFn onSubmit={getMovies} />
+        <InputFn onSubmit={getFirstMovies} />
       </section>
       <hr />
       <section id="display__movies">
-        <Sorting moviesToSort={moviesToShow} onSort={handleSort} />
+        <Sorting moviesToSort={allMovies} onSort={handleSort} />
         <hr />
         <ShowMovies
-          moviesToShow={moviesToShow}
+          moviesToShow={allMovies}
           featureToLookup={(lookupId) => {
             getFeatureId(lookupId);
           }}
+          // displayCount={displayCount}
+          getMoreResults={getNext}
         />
       </section>
       <hr />
-      <section id="display__feature">
-      </section>
+      <section id="display__feature"></section>
     </>
   );
 };

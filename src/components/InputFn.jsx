@@ -10,8 +10,8 @@ const [inputValue, setInputValue] = useState("")
 
   const handleSubmit = () => {
         onSubmit(inputValue);
-        // setInputValue("")
-  };
+// console.log(inputValue)  
+};
 
   return (
     <>
